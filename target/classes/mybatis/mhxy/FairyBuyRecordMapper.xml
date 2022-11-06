@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mhxy.fairy.mapper.FairyBuyRecordMapper">
+
+    <resultMap type="com.ruoyi.project.mhxy.fairy.bean.FairyBuyRecord" id="FairyBuyRecordResult">
+        <result property="id" column="id"/>
+        <result property="fairyStoreId" column="fairy_store_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="price" column="price"/>
+        <result property="region" column="region"/>
+        <result property="searchTime" column="search_time"/>
+        <result property="isBuySuccess" column="is_buy_success"/>
+    </resultMap>
+
+    <sql id="selectFairyBuyRecordVo">
+        select id,
+               fairy_store_id,
+               create_time,
+               update_time,
+               price,
+               region,
+               search_time,
+               is_buy_success
+        from fairy_buy_record
+    </sql>
+
+    <select id="selectFairyBuyRecordList" parameterType="com.ruoyi.project.mhxy.fairy.bean.FairyBuyRecord" resultMap="FairyBuyRecordResult">
+        <include refid="selectFairyBuyRecordVo"/>
+        <where>
+            <if test="fairyStoreId != null ">and fairy_store_id = #{fairyStoreId}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="region != null  and region != ''">and region = #{region}</if>
+            <if test="searchTime != null  and searchTime != ''">and search_time = #{searchTime}</if>
+            <if test="isBuySuccess != null ">and is_buy_success = #{isBuySuccess}</if>
+        </where>
+    </select>
+
+    <select id="selectFairyBuyRecordById" parameterType="Long" resultMap="FairyBuyRecordResult">
+        <include refid="selectFairyBuyRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFairyBuyRecord" parameterType="com.ruoyi.project.mhxy.fairy.bean.FairyBuyRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into fairy_buy_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fairyStoreId != null">fairy_store_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="price != null">price,</if>
+            <if test="region != null and region != ''">region,</if>
+            <if test="searchTime != null and searchTime != ''">search_time,</if>
+            <if test="isBuySuccess != null">is_buy_success,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fairyStoreId != null">#{fairyStoreId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="price != null">#{price},</if>
+            <if test="region != null and region != ''">#{region},</if>
+            <if test="searchTime != null and searchTime != ''">#{searchTime},</if>
+            <if test="isBuySuccess != null">#{isBuySuccess},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFairyBuyRecord" parameterType="com.ruoyi.project.mhxy.fairy.bean.FairyBuyRecord">
+        update fairy_buy_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fairyStoreId != null">fairy_store_id = #{fairyStoreId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="region != null and region != ''">region = #{region},</if>
+            <if test="searchTime != null and searchTime != ''">search_time = #{searchTime},</if>
+            <if test="isBuySuccess != null">is_buy_success = #{isBuySuccess},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFairyBuyRecordById" parameterType="Long">
+        delete
+        from fairy_buy_record
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteFairyBuyRecordByIds" parameterType="String">
+        delete from fairy_buy_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

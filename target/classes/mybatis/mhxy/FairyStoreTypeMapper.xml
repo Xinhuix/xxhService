@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mhxy.fairy.mapper.FairyStoreTypeMapper">
+    
+    <resultMap type="com.ruoyi.project.mhxy.fairy.bean.FairyStoreType" id="FairyStoreTypeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectFairyStoreTypeVo">
+        select id, name, type, create_time, update_time from fairy_store_type
+    </sql>
+
+    <select id="selectFairyStoreTypeList" parameterType="com.ruoyi.project.mhxy.fairy.bean.FairyStoreType" resultMap="FairyStoreTypeResult">
+        <include refid="selectFairyStoreTypeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null "> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectFairyStoreTypeById" parameterType="Long" resultMap="FairyStoreTypeResult">
+        <include refid="selectFairyStoreTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFairyStoreType" parameterType="com.ruoyi.project.mhxy.fairy.bean.FairyStoreType" useGeneratedKeys="true" keyProperty="id">
+        insert into fairy_store_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFairyStoreType" parameterType="com.ruoyi.project.mhxy.fairy.bean.FairyStoreType">
+        update fairy_store_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFairyStoreTypeById" parameterType="Long">
+        delete from fairy_store_type where id = #{id}
+    </delete>
+
+    <delete id="deleteFairyStoreTypeByIds" parameterType="String">
+        delete from fairy_store_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
