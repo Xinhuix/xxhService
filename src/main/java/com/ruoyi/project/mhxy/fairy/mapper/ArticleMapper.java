@@ -1,56 +1,63 @@
 package com.ruoyi.project.mhxy.fairy.mapper;
 
 
-import com.ruoyi.project.mhxy.fairy.bean.ArticleVO;
+import com.ruoyi.project.mhxy.fairy.bean.Article;
 
 import java.util.List;
 
 /**
- * @ClassName ArticleDao
- * @Description TODO
- * @Author 徐鑫辉
- * @Date 2020年04月02日 12:04
- **/
-public interface ArticleMapper {
+ * 【请填写功能名称】Mapper接口
+ * 
+ * @author ruoyi
+ * @date 2022-11-20
+ */
+public interface ArticleMapper 
+{
+    /**
+     * 查询【请填写功能名称】
+     * 
+     * @param id 【请填写功能名称】主键
+     * @return 【请填写功能名称】
+     */
+    public Article selectArticleById(Long id);
 
     /**
-     * @param articleVO
-     * @Description TODO 添加文章
-     * @return: void
-     * @Author: Xinhxu
-     * @Date: 14:02 2020/4/2
+     * 查询【请填写功能名称】列表
+     * 
+     * @param article 【请填写功能名称】
+     * @return 【请填写功能名称】集合
      */
-
-    int addArticle(ArticleVO articleVO);
+    public List<Article> selectArticleList(Article article);
 
     /**
-     * @param articleVO
-     * @Description TODO 获取文章列表
-     * @return: java.util.List<com.visionvera.vo.ArticleVO>
-     * @Author: Xinhxu
-     * @Date: 14:03 2020/4/2
+     * 新增【请填写功能名称】
+     * 
+     * @param article 【请填写功能名称】
+     * @return 结果
      */
-
-    List<ArticleVO> getArticleList(ArticleVO articleVO);
+    public int insertArticle(Article article);
 
     /**
-     * @param articleVO
-     * @Description TODO 修改文章
-     * @return: void
-     * @Author: Xinhxu
-     * @Date: 14:41 2020/4/2
+     * 修改【请填写功能名称】
+     * 
+     * @param article 【请填写功能名称】
+     * @return 结果
      */
-
-    void updateArticle(ArticleVO articleVO);
+    public int updateArticle(Article article);
 
     /**
-     * @param articleVO
-     * @Description TODO 删除文章
-     * @return: void
-     * @Author: Xinhxu
-     * @Date: 15:11 2020/4/6
+     * 删除【请填写功能名称】
+     * 
+     * @param id 【请填写功能名称】主键
+     * @return 结果
      */
+    public int deleteArticleById(Long id);
 
-    void deleteArticle(ArticleVO articleVO);
+    /**
+     * 批量删除【请填写功能名称】
+     * 
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteArticleByIds(String[] ids);
 }
-

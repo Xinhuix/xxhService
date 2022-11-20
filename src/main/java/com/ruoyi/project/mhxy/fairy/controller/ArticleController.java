@@ -1,82 +1,130 @@
 package com.ruoyi.project.mhxy.fairy.controller;
 
-import com.ruoyi.common.utils.FileUploadUtil;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.mhxy.fairy.ArticleService;
-import com.ruoyi.project.mhxy.fairy.base.BaseReturn;
-import com.ruoyi.project.mhxy.fairy.base.ReturnData;
-import com.ruoyi.project.mhxy.fairy.bean.ArticleVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.utils.FileUploadUtil;
+import com.ruoyi.project.mhxy.fairy.IArticleService;
+import com.ruoyi.project.mhxy.fairy.bean.Article;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import com.ruoyi.framework.aspectj.lang.annotation.Log;
+import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
+import com.ruoyi.framework.web.controller.BaseController;
+import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * @ClassName MeetingController
- * @Description TODO
- * @Author 徐鑫辉
- * @Date 2019年12月23日 9:51
- **/
-@RestController
-@RequestMapping("/rest")
-@CrossOrigin
-public class ArticleController extends BaseReturn {
+ * 【请填写功能名称】Controller
+ * 
+ * @author ruoyi
+ * @date 2022-11-20
+ */
+@Controller
+@RequestMapping("/system/article")
+public class ArticleController extends BaseController
+{
+    private String prefix = "system/article";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
+    @Autowired
+    private IArticleService articleService;
 
-    @Resource
-    ArticleService articleService;
-
-
-    /**
-     * @param articleVO
-     * @Description TODO 添加文章
-     * @return: com.visionvera.bean.base.ReturnData
-     * @Author: Xinhxu
-     * @Date: 14:12 2020/4/2
-     */
-
-    @RequestMapping(value = "/addArticle", method = RequestMethod.POST)
-    public ReturnData addArticle(@RequestBody ArticleVO articleVO) {
-        if (null != articleVO.getId()) {
-            articleService.updateArticle(articleVO);
-            return super.returnResult(0, "编辑文章成功", null, articleVO);
-        }
-        articleService.addArticle(articleVO);
-        return super.returnResult(0, "添加文章成功", null, articleVO);
+    @RequiresPermissions("system:article:view")
+    @GetMapping()
+    public String article()
+    {
+        return prefix + "/article";
     }
 
     /**
-     * @param
-     * @Description TODO 获取文章列表
-     * @return: com.visionvera.bean.base.ReturnData
-     * @Author: Xinhxu
-     * @Date: 14:13 2020/4/2
+     * 查询【请填写功能名称】列表
      */
-
-    @RequestMapping(value = "/getArticleList", method = RequestMethod.GET)
-    public ReturnData getArticleList(@RequestParam(value = "pageSize", defaultValue = "-1", required = false) Integer pageSize,
-                                     @RequestParam(value = "pageNum", defaultValue = "1", required = false) Integer pageNum,
-                                     @RequestParam(value = "id", required = false) Integer id,
-                                     HttpServletRequest request) {
-        ArticleVO articleVO = new ArticleVO();
-        if (null != id) {
-            articleVO.setId(id);
-        }
-        return articleService.getArticleList(articleVO, pageSize, pageNum);
+    @RequiresPermissions("system:article:list")
+    @PostMapping("/list")
+    @ResponseBody
+    public TableDataInfo list(Article article)
+    {
+        startPage();
+        List<Article> list = articleService.selectArticleList(article);
+        return getDataTable(list);
     }
 
-    public static String setMessage(String message) {
-        if (StringUtils.isNull(message)) {
-            return "";
-        }
-        return message;
+    /**
+     * 导出【请填写功能名称】列表
+     */
+    @RequiresPermissions("system:article:export")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    @ResponseBody
+    public AjaxResult export(Article article)
+    {
+        List<Article> list = articleService.selectArticleList(article);
+        ExcelUtil<Article> util = new ExcelUtil<Article>(Article.class);
+        return util.exportExcel(list, "【请填写功能名称】数据");
+    }
+
+    /**
+     * 新增【请填写功能名称】
+     */
+    @GetMapping("/add")
+    public String add()
+    {
+        return prefix + "/add";
+    }
+
+    /**
+     * 新增保存【请填写功能名称】
+     */
+    @RequiresPermissions("system:article:add")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @PostMapping("/add")
+    @ResponseBody
+    public AjaxResult addSave(Article article)
+    {
+        return toAjax(articleService.insertArticle(article));
+    }
+
+    /**
+     * 修改【请填写功能名称】
+     */
+    @RequiresPermissions("system:article:edit")
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable("id") Long id, ModelMap mmap)
+    {
+        Article article = articleService.selectArticleById(id);
+        mmap.put("article", article);
+        return prefix + "/edit";
+    }
+
+    /**
+     * 修改保存【请填写功能名称】
+     */
+    @RequiresPermissions("system:article:edit")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
+    @PostMapping("/edit")
+    @ResponseBody
+    public AjaxResult editSave(Article article)
+    {
+        return toAjax(articleService.updateArticle(article));
+    }
+
+    /**
+     * 删除【请填写功能名称】
+     */
+    @RequiresPermissions("system:article:remove")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
+    @PostMapping( "/remove")
+    @ResponseBody
+    public AjaxResult remove(String ids)
+    {
+        return toAjax(articleService.deleteArticleByIds(ids));
     }
 
 
@@ -93,7 +141,6 @@ public class ArticleController extends BaseReturn {
     public Map<String, Object> uploadFile(HttpServletRequest request,
                                           @RequestParam(value = "remark", required = false) String remark) {
         try {
-            LOGGER.info("开始上传图片...");
             Map<String, Object> map = new HashMap<>();
             Map<String, Object> uploadFile = FileUploadUtil.uploadFile(request, null, "");
             //图片上传文件完成 数据库插入数据
@@ -101,68 +148,8 @@ public class ArticleController extends BaseReturn {
             map.put("msg", "上传成功");
             return map;
         } catch (Exception e) {
-            LOGGER.error("HomeController ===== uploadFile ===== 上传文件失败 =>", e);
             e.printStackTrace();
             return null;
         }
     }
-
-    /**
-     * @param pageSize
-     * @param pageNum
-     * @Description TODO 获取文章分页
-     * @return: java.util.Map<java.lang.String, java.lang.Object>
-     * @Author: Xinhxu
-     * @Date: 19:54 2020/4/6
-     */
-
-    @RequestMapping(value = "/getArticleListData", method = RequestMethod.GET)
-    public Map<String, Object> getArticleListData(@RequestParam(value = "limit", defaultValue = "5", required = false) Integer pageSize,
-                                                  @RequestParam(value = "page", defaultValue = "1", required = false) Integer pageNum,
-                                                  @RequestParam(value = "access_token", required = false) String access_token) {
-        Map<String, Object> hashMap = new HashMap<>();
-        hashMap.put("code", 0);
-        hashMap.put("mgs", "");
-        System.out.println(access_token);
-        try {
-            ArticleVO articleVO = new ArticleVO();
-            ReturnData articleList = articleService.getArticleListData(articleVO, pageSize, pageNum);
-            Map<String, Object> data = (HashMap) articleList.getData();
-            List<ArticleVO> items = (ArrayList) data.get("items");
-            hashMap.put("count", (Long) data.get("extra"));
-            hashMap.put("data", items);
-            return hashMap;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * @param articleVO
-     * @Description TODO 删除文章
-     * @return: com.visionvera.bean.base.ReturnData
-     * @Author: Xinhxu
-     * @Date: 15:31 2020/4/6
-     */
-
-    @RequestMapping(value = "/deleteArticle", method = RequestMethod.POST)
-    public ReturnData deleteArticle(@RequestBody ArticleVO articleVO) {
-        return articleService.deleteArticle(articleVO);
-    }
-
-    /**
-     * @param title
-     * @Description TODO 模糊查询文章
-     * @return: com.visionvera.bean.base.ReturnData
-     * @Author: Xinhxu
-     * @Date: 15:31 2020/4/6
-     */
-    @RequestMapping(value = "/getInquireArticle", method = RequestMethod.GET)
-    public ReturnData getInquireArticle(@RequestParam(value = "title") String title) {
-        ArticleVO articleVO = new ArticleVO();
-        articleVO.setTitle(title);
-        return articleService.getInquireArticle(articleVO);
-    }
-
 }
