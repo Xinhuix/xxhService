@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ruoyi.project.mhxy.fairy.mapper.LabelMapper">
+
+
+    <insert id="addLabel" parameterType="com.ruoyi.project.mhxy.fairy.bean.LabelVO">
+        insert into label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="clickNumber != null">
+                click_number,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="clickNumber != null">
+                #{clickNumber,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getLabelList" resultType="com.ruoyi.project.mhxy.fairy.bean.LabelVO" parameterType="com.ruoyi.project.mhxy.fairy.bean.LabelVO">
+        SELECT *,
+        date_format(`create_time`,'%Y-%m-%d %H:%i:%s') AS `createTime`,
+        click_number AS clickNumber
+        FROM label
+        <if test="id != null">
+            WHERE id =#{id}
+        </if>
+    </select>
+
+    <update id="updateLabel" parameterType="com.ruoyi.project.mhxy.fairy.bean.LabelVO">
+        update label
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null and !name.equals('')">
+                `name`=#{name},
+            </if>
+            <if test="clickNumber != null and !clickNumber.equals('')">
+                click_number=#{clickNumber},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+</mapper>
