@@ -32,6 +32,12 @@ public class RegisterController extends BaseController
         return "register";
     }
 
+    @GetMapping("/notes")
+    public String notes()
+    {
+        return "notes";
+    }
+
     @PostMapping("/register")
     @ResponseBody
     public AjaxResult ajaxRegister(User user)

@@ -36,6 +36,18 @@ public class LabelController extends BaseController {
         return prefix + "/label";
     }
 
+
+    /**
+     * 查询【请填写功能名称】列表
+     */
+    @RequiresPermissions("system:label:all")
+    @GetMapping("/all")
+    @ResponseBody
+    public TableDataInfo all(Label label) {
+        List<Label> list = labelService.selectLabelList(label);
+        return getDataTable(list);
+    }
+
     /**
      * 查询【请填写功能名称】列表
      */

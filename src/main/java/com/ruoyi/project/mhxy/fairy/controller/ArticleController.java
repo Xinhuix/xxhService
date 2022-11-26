@@ -23,14 +23,13 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 【请填写功能名称】Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-11-20
  */
 @Controller
 @RequestMapping("/system/article")
-public class ArticleController extends BaseController
-{
+public class ArticleController extends BaseController {
     private String prefix = "system/article";
 
     @Autowired
@@ -38,8 +37,7 @@ public class ArticleController extends BaseController
 
     @RequiresPermissions("system:article:view")
     @GetMapping()
-    public String article()
-    {
+    public String article() {
         return prefix + "/article";
     }
 
@@ -49,8 +47,7 @@ public class ArticleController extends BaseController
     @RequiresPermissions("system:article:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(Article article)
-    {
+    public TableDataInfo list(Article article) {
         startPage();
         List<Article> list = articleService.selectArticleList(article);
         return getDataTable(list);
@@ -63,8 +60,7 @@ public class ArticleController extends BaseController
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(Article article)
-    {
+    public AjaxResult export(Article article) {
         List<Article> list = articleService.selectArticleList(article);
         ExcelUtil<Article> util = new ExcelUtil<Article>(Article.class);
         return util.exportExcel(list, "【请填写功能名称】数据");
@@ -74,8 +70,7 @@ public class ArticleController extends BaseController
      * 新增【请填写功能名称】
      */
     @GetMapping("/add")
-    public String add()
-    {
+    public String add() {
         return prefix + "/add";
     }
 
@@ -86,8 +81,7 @@ public class ArticleController extends BaseController
     @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(Article article)
-    {
+    public AjaxResult addSave(@RequestBody Article article) {
         return toAjax(articleService.insertArticle(article));
     }
 
@@ -96,11 +90,9 @@ public class ArticleController extends BaseController
      */
     @RequiresPermissions("system:article:edit")
     @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Long id, ModelMap mmap)
-    {
-        Article article = articleService.selectArticleById(id);
-        mmap.put("article", article);
-        return prefix + "/edit";
+    @ResponseBody
+    public AjaxResult edit(@PathVariable("id") Long id) {
+        return success(articleService.selectArticleById(id));
     }
 
     /**
@@ -110,8 +102,7 @@ public class ArticleController extends BaseController
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(Article article)
-    {
+    public AjaxResult editSave(Article article) {
         return toAjax(articleService.updateArticle(article));
     }
 
@@ -120,10 +111,9 @@ public class ArticleController extends BaseController
      */
     @RequiresPermissions("system:article:remove")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
+    @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) {
         return toAjax(articleService.deleteArticleByIds(ids));
     }
 
@@ -132,7 +122,7 @@ public class ArticleController extends BaseController
      * @param request
      * @param remark
      * @Description TODO 上传图片
-     * @return: java.util.Map<java.lang.String, java.lang.Object>
+     * @return: java.util.Map<java.lang.String ,   java.lang.Object>
      * @Author: Xinhxu
      * @Date: 15:03 2020/4/15
      */
