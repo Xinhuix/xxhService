@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mhxy.fairy.mapper.LabelMapper">
+    
+    <resultMap type="com.ruoyi.project.mhxy.fairy.bean.Label" id="LabelResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="name"    column="name"    />
+        <result property="clickNumber"    column="click_number"    />
+    </resultMap>
+
+    <sql id="selectLabelVo">
+        select id, create_time, name, click_number from label
+    </sql>
+
+    <select id="selectLabelList" parameterType="com.ruoyi.project.mhxy.fairy.bean.Label" resultMap="LabelResult">
+        <include refid="selectLabelVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="clickNumber != null "> and click_number = #{clickNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectLabelById" parameterType="Long" resultMap="LabelResult">
+        <include refid="selectLabelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertLabel" parameterType="com.ruoyi.project.mhxy.fairy.bean.Label">
+        insert into label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="name != null">name,</if>
+            <if test="clickNumber != null">click_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="name != null">#{name},</if>
+            <if test="clickNumber != null">#{clickNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateLabel" parameterType="com.ruoyi.project.mhxy.fairy.bean.Label">
+        update label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="clickNumber != null">click_number = #{clickNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLabelById" parameterType="Long">
+        delete from label where id = #{id}
+    </delete>
+
+    <delete id="deleteLabelByIds" parameterType="String">
+        delete from label where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
