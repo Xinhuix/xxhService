@@ -111,8 +111,7 @@ public class FileUploadUtils {
      */
     public static final String extractFilename(MultipartFile file, boolean timeFileFlag) {
         if (timeFileFlag) {
-            return StringUtils.format("{}.{}",
-                    file.getOriginalFilename(), getExtension(file));
+            return file.getOriginalFilename();
         }
         return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(),
                 FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));

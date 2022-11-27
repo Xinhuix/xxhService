@@ -49,7 +49,8 @@
         </ul>
         <!--    <le-editor :value="value" :image-uploader="imageUploader" @uploadImg="uploadImg" @save="save"></le-editor>-->
         <!--:value="value"-->
-        <le-editor v-model="value" :image-uploader="imageUploader" :hljs-css="hljsCss" @uploadImg="uploadImg" @save="save"></le-editor>
+        <le-editor v-model="value" :image-uploader="imageUploader" :hljs-css="hljsCss" @uploadImg="uploadImg"
+                   @save="save"></le-editor>
 
 
         <button type="submit" @click="submit">
@@ -75,9 +76,9 @@
                 custom: false,
                 fileType: 'file',
                 fileNameType: '',
-                imagePrefix: 'http://127.0.0.1:8066/profile/upload/', // 图片前缀地址
+                imagePrefix: getHost() + '/profile/upload/', // 图片前缀地址
                 type: 'server',
-                url: 'http://127.0.0.1:8066/common/uploadTime'
+                url: getHost() + '/common/uploadTime'
             }
         },
         created() {
