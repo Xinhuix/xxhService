@@ -1,25 +1,25 @@
 package com.ruoyi.project.mhxy.fairy.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Sets;
 import com.ruoyi.common.utils.FileUploadUtil;
-import com.ruoyi.project.mhxy.fairy.IArticleService;
-import com.ruoyi.project.mhxy.fairy.bean.Article;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.mhxy.fairy.IArticleService;
+import com.ruoyi.project.mhxy.fairy.ILabelService;
+import com.ruoyi.project.mhxy.fairy.bean.Article;
+import com.ruoyi.project.mhxy.fairy.bean.Label;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * 【请填写功能名称】Controller
@@ -34,6 +34,9 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private IArticleService articleService;
+
+    @Autowired
+    private ILabelService labelService;
 
     @RequiresPermissions("system:article:view")
     @GetMapping()
@@ -82,7 +85,22 @@ public class ArticleController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(@RequestBody Article article) {
-        return toAjax(articleService.insertArticle(article));
+        String[] split = article.getArticleType().split(",");
+        Set<String> list = Sets.newHashSet();
+        for (String s : split) {
+            Label label = labelService.selectLabelById(Long.parseLong(s));
+            list.add(label.getName());
+        }
+        String str = StringUtils.join(list, ",");
+        article.setArticleName(str);
+        if (Objects.nonNull(article.getId())) {
+            Article articleById = articleService.selectArticleById(article.getId());
+            article.setVersion(articleById.getVersion() + 1);
+            articleService.updateArticle(article);
+            return success(article);
+        }
+        articleService.insertArticle(article);
+        return success(article);
     }
 
     /**
@@ -122,7 +140,7 @@ public class ArticleController extends BaseController {
      * @param request
      * @param remark
      * @Description TODO 上传图片
-     * @return: java.util.Map<java.lang.String ,   java.lang.Object>
+     * @return: java.util.Map<java.lang.String                                                               ,                                                                                                                               java.lang.Object>
      * @Author: Xinhxu
      * @Date: 15:03 2020/4/15
      */

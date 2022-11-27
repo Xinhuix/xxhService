@@ -11,7 +11,7 @@ import com.ruoyi.common.utils.text.Convert;
 
 /**
  * 【请填写功能名称】Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2022-11-20
  */
@@ -23,7 +23,7 @@ public class ArticleServiceImpl implements IArticleService
 
     /**
      * 查询【请填写功能名称】
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
@@ -35,7 +35,7 @@ public class ArticleServiceImpl implements IArticleService
 
     /**
      * 查询【请填写功能名称】列表
-     * 
+     *
      * @param article 【请填写功能名称】
      * @return 【请填写功能名称】
      */
@@ -47,7 +47,7 @@ public class ArticleServiceImpl implements IArticleService
 
     /**
      * 新增【请填写功能名称】
-     * 
+     *
      * @param article 【请填写功能名称】
      * @return 结果
      */
@@ -60,7 +60,7 @@ public class ArticleServiceImpl implements IArticleService
 
     /**
      * 修改【请填写功能名称】
-     * 
+     *
      * @param article 【请填写功能名称】
      * @return 结果
      */
@@ -73,7 +73,7 @@ public class ArticleServiceImpl implements IArticleService
 
     /**
      * 批量删除【请填写功能名称】
-     * 
+     *
      * @param ids 需要删除的【请填写功能名称】主键
      * @return 结果
      */
@@ -85,7 +85,7 @@ public class ArticleServiceImpl implements IArticleService
 
     /**
      * 删除【请填写功能名称】信息
-     * 
+     *
      * @param id 【请填写功能名称】主键
      * @return 结果
      */

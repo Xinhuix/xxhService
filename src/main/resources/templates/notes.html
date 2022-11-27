@@ -165,7 +165,7 @@
                     return;
                 }
                 const value = [];
-                for (var i = 0; i < this.labelListTwo.length; i++) {
+                for (let i = 0; i < this.labelListTwo.length; i++) {
                     value.push(this.labelListTwo[i].id);
                 }
                 const label = value.join(",");
@@ -189,7 +189,6 @@
                     }
                 }).then((res) => {
                     this.article = res.data.data;
-                    console.log("保存成功")
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -198,7 +197,6 @@
                 return str.replace(/(\r\n|\r|\n)+/g, '')
             },
             deleteLabel(event) {
-                console.log(12312);
                 var index = this.labelListTwo.indexOf(event);
                 if (index > -1) {
                     this.labelListTwo.splice(index, 1);
