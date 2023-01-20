@@ -32,6 +32,12 @@ public class RegisterController extends BaseController
         return "register";
     }
 
+    @GetMapping("/detail")
+    public String detail()
+    {
+        return "detail";
+    }
+
     @GetMapping("/notes")
     public String notes()
     {

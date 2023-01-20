@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; Charset=utf-8" />
+		<meta http-equiv="Content-Language" content="zh-CN" />
+
+		<!-- jquery -->
+		<script src="../static/js/vue.js" th:src="@{/js/vue.js}"></script>
+		<script src="../static/js/leEditor.js" th:src="@{/js/leEditor.js}"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="../static/js/config.js" th:src="@{/js/config.js}"></script>
+		<link rel="stylesheet" href="../static/css/detail.css" th:href="@{/css/detail.css}">
+	</head>
+
+	<body>
+<div id="app">
+
+		<div class="blog-body">
+
+			<div class="blog-container">
+				<div class="blog-main">
+					<div class="blog-main">
+
+						<div id="parentArticleList" class="blog-main-left animated slideInLeft">
+
+							<div class="article-detail shadow">
+								<div class="article-detail-title title">{{article.title}}</div>
+								<div class="article-detail-info">
+									<span>编辑时间：{{article.updateTime}}</span>
+									<span>作者：{{article.author}}</span>
+									<span>版本：{{article.version}}</span>
+
+								</div>
+                                <le-preview ref="md-preview" :is-md="true" :value="mdContent" ></le-preview>
+							</div>
+
+
+
+
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+</div>
+</body>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                value:"",
+                title:"",
+                mdContent:"",
+                hljsCss: 'agate',
+                article:{
+
+                },
+            },
+			mounted() {
+                let resp = location.search;
+                console.log("初始值：" + resp);
+                let id = resp.substring(4);
+                const url =getHost() + 'system/article/edit/' + id;
+                axios({
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    url:url,
+                    responseType: 'json',
+                    data:{
+
+                    }
+                }).then((res)=>{
+                    console.log(res);
+                    this.article = res.data.data;
+                    this.mdContent = this.article.content;
+                    console.log(this.article);
+                }) .catch((error)=> {
+                    console.log(error);
+                });
+                ;
+            },
+        })
+    </script>
+    <style>
+        #app {
+            width: 100%;
+            height: 620px;
+        }
+
+        /*设置编辑器宽高*/
+        #editor-main {
+            color: #2c3e50;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</html>

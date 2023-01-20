@@ -8,7 +8,7 @@
     <title>样例</title>
 
     <!-- axios -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
 
@@ -90,7 +90,6 @@
             let id = resp.substring(4);
             console.log(id);
             if (isNumber(id)) {
-                // this.isShow = false
                 const url = getHost() + 'system/article/edit/' + id;
                 axios({
                     method: 'GET',
