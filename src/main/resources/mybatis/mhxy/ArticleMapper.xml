@@ -25,8 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectArticleList" parameterType="com.ruoyi.project.mhxy.fairy.bean.Article" resultMap="ArticleResult">
-        <include refid="selectArticleVo"/>
-        <where>  
+        select id, create_time, update_time, version, author, cover_image,  title, clicks, reply_number, article_type, article_name from article
+        <where>
             <if test="version != null "> and version = #{version}</if>
             <if test="author != null  and author != ''"> and author = #{author}</if>
             <if test="coverImage != null  and coverImage != ''"> and cover_image = #{coverImage}</if>

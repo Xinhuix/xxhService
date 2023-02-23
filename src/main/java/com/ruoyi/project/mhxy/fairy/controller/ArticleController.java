@@ -53,11 +53,6 @@ public class ArticleController extends BaseController {
     public TableDataInfo list(Article article) {
         startPage();
         List<Article> list = articleService.selectArticleList(article);
-        for (Article info : list) {
-            if (info.getContent().length() > 100) {
-                info.setContent(info.getContent().substring(0,150) + "....");
-            }
-        }
         return getDataTable(list);
     }
 
