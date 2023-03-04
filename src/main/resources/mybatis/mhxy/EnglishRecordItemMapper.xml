@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.mhxy.fairy.mapper.EnglishRecordItemMapper">
+    
+    <resultMap type="com.ruoyi.project.mhxy.fairy.bean.EnglishRecordItem" id="EnglishRecordItemResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="state"    column="state"    />
+        <result property="chinese"    column="chinese"    />
+        <result property="english"    column="english"    />
+        <result property="review"    column="review"    />
+        <result property="englishRecordId"    column="english_record_id"    />
+    </resultMap>
+
+    <sql id="selectEnglishRecordItemVo">
+        select id, create_time, update_time, state, chinese, english, review, english_record_id from english_record_item
+    </sql>
+
+    <select id="selectEnglishRecordItemList" parameterType="com.ruoyi.project.mhxy.fairy.bean.EnglishRecordItem" resultMap="EnglishRecordItemResult">
+        <include refid="selectEnglishRecordItemVo"/>
+        <where>  
+            <if test="state != null "> and state = #{state}</if>
+            <if test="chinese != null  and chinese != ''"> and chinese = #{chinese}</if>
+            <if test="english != null  and english != ''"> and english = #{english}</if>
+            <if test="review != null  and review != ''"> and review = #{review}</if>
+            <if test="englishRecordId != null "> and english_record_id = #{englishRecordId}</if>
+        </where>
+    </select>
+    
+    <select id="selectEnglishRecordItemById" parameterType="Integer" resultMap="EnglishRecordItemResult">
+        <include refid="selectEnglishRecordItemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEnglishRecordItem" parameterType="com.ruoyi.project.mhxy.fairy.bean.EnglishRecordItem" useGeneratedKeys="true" keyProperty="id">
+        insert into english_record_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="state != null">state,</if>
+            <if test="chinese != null and chinese != ''">chinese,</if>
+            <if test="english != null and english != ''">english,</if>
+            <if test="review != null and review != ''">review,</if>
+            <if test="englishRecordId != null">english_record_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="state != null">#{state},</if>
+            <if test="chinese != null and chinese != ''">#{chinese},</if>
+            <if test="english != null and english != ''">#{english},</if>
+            <if test="review != null and review != ''">#{review},</if>
+            <if test="englishRecordId != null">#{englishRecordId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEnglishRecordItem" parameterType="com.ruoyi.project.mhxy.fairy.bean.EnglishRecordItem">
+        update english_record_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="chinese != null and chinese != ''">chinese = #{chinese},</if>
+            <if test="english != null and english != ''">english = #{english},</if>
+            <if test="review != null and review != ''">review = #{review},</if>
+            <if test="englishRecordId != null">english_record_id = #{englishRecordId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEnglishRecordItemById" parameterType="Integer">
+        delete from english_record_item where id = #{id}
+    </delete>
+
+    <delete id="deleteEnglishRecordItemByIds" parameterType="String">
+        delete from english_record_item where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
