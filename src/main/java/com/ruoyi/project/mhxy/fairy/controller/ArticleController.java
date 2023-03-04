@@ -1,18 +1,24 @@
 package com.ruoyi.project.mhxy.fairy.controller;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.ruoyi.common.utils.FileUploadUtil;
+import com.ruoyi.common.utils.GuavaCacheDemo;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.dto.EnglishRecordDTO;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.mhxy.fairy.IArticleService;
+import com.ruoyi.project.mhxy.fairy.IEnglishRecordService;
 import com.ruoyi.project.mhxy.fairy.ILabelService;
 import com.ruoyi.project.mhxy.fairy.bean.Article;
+import com.ruoyi.project.mhxy.fairy.bean.EnglishRecord;
 import com.ruoyi.project.mhxy.fairy.bean.Label;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +26,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 【请填写功能名称】Controller
@@ -29,6 +38,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/system/article")
+@Slf4j
 public class ArticleController extends BaseController {
     private String prefix = "system/article";
 
@@ -37,6 +47,10 @@ public class ArticleController extends BaseController {
 
     @Autowired
     private ILabelService labelService;
+
+    @Autowired
+    private IEnglishRecordService englishRecordService;
+
 
     @RequiresPermissions("system:article:view")
     @GetMapping()
@@ -97,10 +111,40 @@ public class ArticleController extends BaseController {
             Article articleById = articleService.selectArticleById(article.getId());
             article.setVersion(articleById.getVersion() + 1);
             articleService.updateArticle(article);
-            return success(article);
+        } else {
+            articleService.insertArticle(article);
         }
-        articleService.insertArticle(article);
+        if (article.getTitle().contains("英语")) {
+            setEnglishRecord(article.getContent(), article.getId());
+        }
         return success(article);
+    }
+
+    public void setEnglishRecord(String text, Long id) {
+        if (GuavaCacheDemo.isExist(id.intValue())) {
+            return;
+        }
+        new Thread(() -> {
+            log.info("ac=insertEnglishRecord start id={}", id);
+            String[] split = text.split("#");
+            List<EnglishRecordDTO> dateList = Lists.newArrayList();
+            for (String value : split) {
+                EnglishRecordDTO dto = new EnglishRecordDTO();
+                dto.setRecordDate(value.substring(1, 11).trim());
+                dto.setEnglishListModel(Lists.newArrayList(value.split("1.")));
+                dateList.add(dto);
+            }
+            dateList.remove(0);
+            for (EnglishRecordDTO dto : dateList) {
+                EnglishRecord englishRecord = new EnglishRecord();
+                englishRecord.setArticleId(id);
+                englishRecord.setRecordDate(dto.getRecordDate());
+                englishRecord.setState(1);
+                englishRecordService.insertEnglishRecord(englishRecord, dto.getEnglishList());
+            }
+            log.info("ac=insertEnglishRecord end id={}", id);
+        }).start();
+        GuavaCacheDemo.setCacheKey(id.intValue(), System.currentTimeMillis());
     }
 
     /**
@@ -140,7 +184,7 @@ public class ArticleController extends BaseController {
      * @param request
      * @param remark
      * @Description TODO 上传图片
-     * @return: java.util.Map<java.lang.String                                                                                                                               ,                                                                                                                                                                                                                                                               java.lang.Object>
+     * @return: java.util.Map<java.lang.String, java.lang.Object>
      * @Author: Xinhxu
      * @Date: 15:03 2020/4/15
      */
